@@ -52,7 +52,9 @@ class _BottomNavBarPageState extends State<BottomNavBarPage> {
         builder: (context, state) {
           final double progress =
               state.progress; // 0.0 (visible) to 1.0 (hidden)
-          final double bottomPadding = MediaQuery.of(context).padding.bottom;
+          final double bottomPadding =
+              MediaQuery.of(context).padding.bottom +
+              MediaQuery.of(context).viewInsets.bottom;
           const double totalHeight = 60.0; // Consistent height for stable math
 
           final Duration animationDuration = state.animate

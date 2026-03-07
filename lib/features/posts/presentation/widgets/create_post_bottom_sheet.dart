@@ -219,7 +219,10 @@ class _CreatePostBottomSheetState extends State<CreatePostBottomSheet> {
                   16,
                   8,
                   16,
-                  16 + MediaQuery.of(context).padding.bottom,
+                  16 +
+                      (MediaQuery.of(context).viewInsets.bottom > 0
+                          ? MediaQuery.of(context).viewInsets.bottom
+                          : MediaQuery.of(context).padding.bottom),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
