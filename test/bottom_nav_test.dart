@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:my_flutter_project/bottom_nav_bar_page.dart';
+import 'package:snapshare/bottom_nav_bar_page.dart';
 
 void main() {
   testWidgets('Bottom navigation is visible on mobile width', (

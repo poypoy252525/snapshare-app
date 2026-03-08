@@ -1,5 +1,5 @@
-import 'package:my_flutter_project/features/auth/domain/entities/user.dart';
-import 'package:my_flutter_project/features/auth/domain/repositories/auth_repository.dart';
+import 'package:snapshare/features/auth/domain/entities/user.dart';
+import 'package:snapshare/features/auth/domain/repositories/auth_repository.dart';
 
 class LoginUseCase {
   final AuthRepository repository;

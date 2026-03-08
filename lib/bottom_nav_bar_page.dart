@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_flutter_project/features/navigation/presentation/cubit/navigation_cubit.dart';
-import 'package:my_flutter_project/injection_container.dart';
+import 'package:snapshare/features/navigation/presentation/cubit/navigation_cubit.dart';
+import 'package:snapshare/injection_container.dart';
 import 'pages/home_page.dart';
 import 'pages/messages_page.dart';
 import 'pages/notifications_page.dart';

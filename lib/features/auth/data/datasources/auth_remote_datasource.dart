@@ -1,4 +1,4 @@
-import 'package:my_flutter_project/features/auth/domain/entities/user.dart';
+import 'package:snapshare/features/auth/domain/entities/user.dart';
 
 abstract class AuthRemoteDataSource {
   Future<User?> login({required String email, required String password});

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_flutter_project/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:snapshare/features/auth/presentation/bloc/auth_bloc.dart';
 import 'signup_page.dart';
 
 class LoginPage extends StatefulWidget {

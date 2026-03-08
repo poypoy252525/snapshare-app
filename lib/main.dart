@@ -1,8 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_flutter_project/core/presentation/widgets/auth_wrapper.dart';
-import 'package:my_flutter_project/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:snapshare/core/presentation/widgets/auth_wrapper.dart';
+import 'package:snapshare/features/auth/presentation/bloc/auth_bloc.dart';
 import 'injection_container.dart' as di;
 import 'injection_container.dart';
 

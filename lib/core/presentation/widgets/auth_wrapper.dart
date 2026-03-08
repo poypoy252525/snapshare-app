@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_flutter_project/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:my_flutter_project/features/auth/presentation/pages/login_page.dart';
-import 'package:my_flutter_project/bottom_nav_bar_page.dart';
+import 'package:snapshare/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:snapshare/features/auth/presentation/pages/login_page.dart';
+import 'package:snapshare/bottom_nav_bar_page.dart';
 
 class AuthWrapper extends StatelessWidget {
   const AuthWrapper({super.key});

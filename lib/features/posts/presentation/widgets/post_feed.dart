@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_flutter_project/features/navigation/presentation/cubit/navigation_cubit.dart';
-import 'package:my_flutter_project/core/presentation/widgets/scroll_delta_listener.dart';
+import 'package:snapshare/features/navigation/presentation/cubit/navigation_cubit.dart';
+import 'package:snapshare/core/presentation/widgets/scroll_delta_listener.dart';
 import '../bloc/post_bloc.dart';
 import '../bloc/post_state.dart';
 import 'post_card.dart';

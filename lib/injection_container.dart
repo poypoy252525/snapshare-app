@@ -1,20 +1,20 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
-import 'features/posts/data/datasources/post_remote_datasource.dart';
-import 'features/posts/data/repositories/post_repository_impl.dart';
-import 'features/posts/domain/repositories/post_repository.dart';
-import 'features/posts/domain/usecases/get_posts.dart';
-import 'features/posts/presentation/bloc/post_bloc.dart';
-import 'features/navigation/presentation/cubit/navigation_cubit.dart';
-import 'features/auth/data/datasources/auth_remote_datasource.dart';
-import 'features/auth/data/repositories/auth_repository_impl.dart';
-import 'features/auth/domain/repositories/auth_repository.dart';
-import 'features/auth/domain/usecases/get_current_user_usecase.dart';
-import 'features/auth/domain/usecases/login_usecase.dart';
-import 'features/auth/domain/usecases/logout_usecase.dart';
-import 'features/auth/domain/usecases/signup_usecase.dart';
-import 'features/auth/presentation/bloc/auth_bloc.dart';
-import 'core/network/api_constants.dart';
+import 'package:snapshare/features/posts/data/datasources/post_remote_datasource.dart';
+import 'package:snapshare/features/posts/data/repositories/post_repository_impl.dart';
+import 'package:snapshare/features/posts/domain/repositories/post_repository.dart';
+import 'package:snapshare/features/posts/domain/usecases/get_posts.dart';
+import 'package:snapshare/features/posts/presentation/bloc/post_bloc.dart';
+import 'package:snapshare/features/navigation/presentation/cubit/navigation_cubit.dart';
+import 'package:snapshare/features/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:snapshare/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:snapshare/features/auth/domain/repositories/auth_repository.dart';
+import 'package:snapshare/features/auth/domain/usecases/get_current_user_usecase.dart';
+import 'package:snapshare/features/auth/domain/usecases/login_usecase.dart';
+import 'package:snapshare/features/auth/domain/usecases/logout_usecase.dart';
+import 'package:snapshare/features/auth/domain/usecases/signup_usecase.dart';
+import 'package:snapshare/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:snapshare/core/network/api_constants.dart';
 
 final sl = GetIt.instance;
 

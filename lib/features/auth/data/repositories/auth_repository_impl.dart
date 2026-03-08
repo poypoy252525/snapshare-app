@@ -1,6 +1,6 @@
-import 'package:my_flutter_project/features/auth/data/datasources/auth_remote_datasource.dart';
-import 'package:my_flutter_project/features/auth/domain/entities/user.dart';
-import 'package:my_flutter_project/features/auth/domain/repositories/auth_repository.dart';
+import 'package:snapshare/features/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:snapshare/features/auth/domain/entities/user.dart';
+import 'package:snapshare/features/auth/domain/repositories/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;

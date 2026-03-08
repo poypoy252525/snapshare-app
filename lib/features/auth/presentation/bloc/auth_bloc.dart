@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:my_flutter_project/features/auth/domain/entities/user.dart';
-import 'package:my_flutter_project/features/auth/domain/usecases/get_current_user_usecase.dart';
-import 'package:my_flutter_project/features/auth/domain/usecases/login_usecase.dart';
-import 'package:my_flutter_project/features/auth/domain/usecases/logout_usecase.dart';
-import 'package:my_flutter_project/features/auth/domain/usecases/signup_usecase.dart';
+import 'package:snapshare/features/auth/domain/entities/user.dart';
+import 'package:snapshare/features/auth/domain/usecases/get_current_user_usecase.dart';
+import 'package:snapshare/features/auth/domain/usecases/login_usecase.dart';
+import 'package:snapshare/features/auth/domain/usecases/logout_usecase.dart';
+import 'package:snapshare/features/auth/domain/usecases/signup_usecase.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
