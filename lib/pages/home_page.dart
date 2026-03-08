@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../features/posts/presentation/bloc/post_bloc.dart';
 import '../features/posts/presentation/bloc/post_event.dart';
 import '../features/posts/presentation/widgets/post_feed.dart';
-import '../features/posts/presentation/widgets/threads_top_bar.dart';
+import '../features/posts/presentation/widgets/snapshare_top_bar.dart';
 import '../injection_container.dart';
 
 class HomePage extends StatelessWidget {

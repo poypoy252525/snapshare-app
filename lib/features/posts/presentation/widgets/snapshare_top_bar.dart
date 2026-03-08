@@ -15,7 +15,7 @@ class ThreadsTopBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(
         'SnapShare',
         style: TextStyle(
-          fontSize: 24,
+          fontSize: 20,
           fontWeight: FontWeight.bold,
           color: Theme.of(context).brightness == Brightness.dark
               ? Colors.white
