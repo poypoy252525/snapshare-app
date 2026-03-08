@@ -24,6 +24,7 @@ class PostFeed extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           } else if (state is PostLoaded) {
             return ListView.separated(
+              cacheExtent: 1000,
               padding: const EdgeInsets.symmetric(vertical: 0),
               itemCount: state.posts.length,
               separatorBuilder: (context, index) => Divider(

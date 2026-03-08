@@ -1,14 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import '../../domain/entities/post.dart';
+import '../../../../core/presentation/widgets/snapshare_image.dart';
 
-class PostCard extends StatelessWidget {
+class PostCard extends StatefulWidget {
   final Post post;
 
   const PostCard({super.key, required this.post});
 
   @override
+  State<PostCard> createState() => _PostCardState();
+}
+
+class _PostCardState extends State<PostCard>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
     final textColor = isDarkMode ? Colors.white : Colors.black;
@@ -30,22 +41,23 @@ class PostCard extends StatelessWidget {
                       shape: BoxShape.circle,
                       color: Colors.grey[300],
                     ),
-                    child: ClipOval(
-                      child: post.author.avatar != null
-                          ? Image.network(
-                              post.author.avatar!,
-                              fit: BoxFit.cover,
-                            )
-                          : Center(
-                              child: Text(
-                                post.authorUsername[0].toUpperCase(),
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontWeight: FontWeight.bold,
-                                ),
+                    child: widget.post.author.avatar != null
+                        ? SnapShareImage(
+                            imageUrl: widget.post.author.avatar!,
+                            shape: SnapShareImageShape.circle,
+                            fit: BoxFit.cover,
+                            width: 40,
+                            height: 40,
+                          )
+                        : Center(
+                            child: Text(
+                              widget.post.authorUsername[0].toUpperCase(),
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                    ),
+                          ),
                   ),
                   Positioned(
                     bottom: 0,
@@ -81,7 +93,7 @@ class PostCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      post.authorUsername,
+                      widget.post.authorUsername,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
@@ -90,7 +102,7 @@ class PostCard extends StatelessWidget {
                     ),
                     const Spacer(),
                     Text(
-                      _formatTime(post.createdAt),
+                      _formatTime(widget.post.createdAt),
                       style: const TextStyle(color: Colors.grey, fontSize: 13),
                     ),
                     const SizedBox(width: 8),
@@ -100,10 +112,10 @@ class PostCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 // Post Content
                 Text(
-                  post.content,
+                  widget.post.content,
                   style: TextStyle(fontSize: 14, color: textColor, height: 1.3),
                 ),
-                if (post.image != null) ...[
+                if (widget.post.image != null) ...[
                   const SizedBox(height: 12),
                   Container(
                     decoration: BoxDecoration(
@@ -118,26 +130,14 @@ class PostCard extends StatelessWidget {
                         width: 0.5,
                       ),
                     ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.network(
-                        post.image!,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => Container(
-                          height: 200,
-                          width: double.infinity,
-                          color: isDarkMode
-                              ? Colors.grey[900]
-                              : Colors.grey[200],
-                          child: const Icon(
-                            Icons.broken_image,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
+                    child: SnapShareImage(
+                      imageUrl: widget.post.image!,
+                      fit: BoxFit.cover,
+                      borderRadius: 12,
                     ),
                   ),
                 ],
+
                 const SizedBox(height: 12),
                 // Action Icons
                 Row(
@@ -163,7 +163,7 @@ class PostCard extends StatelessWidget {
                 const SizedBox(height: 8),
                 // Stats
                 Text(
-                  '${post.commentsCount} replies · ${post.likesCount} likes',
+                  '${widget.post.commentsCount} replies · ${widget.post.likesCount} likes',
                   style: const TextStyle(color: Colors.grey, fontSize: 13),
                 ),
               ],

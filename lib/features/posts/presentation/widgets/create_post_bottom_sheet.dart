@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:snapshare/features/auth/presentation/bloc/auth_bloc.dart';
 
 class CreatePostBottomSheet extends StatefulWidget {
@@ -108,7 +109,9 @@ class _CreatePostBottomSheetState extends State<CreatePostBottomSheet> {
                           children: [
                             CircleAvatar(
                               radius: 18,
-                              backgroundImage: NetworkImage(avatarUrl),
+                              backgroundImage: CachedNetworkImageProvider(
+                                avatarUrl,
+                              ),
                             ),
                             Expanded(
                               child: Container(
@@ -121,7 +124,9 @@ class _CreatePostBottomSheetState extends State<CreatePostBottomSheet> {
                             ),
                             CircleAvatar(
                               radius: 10,
-                              backgroundImage: NetworkImage(avatarUrl),
+                              backgroundImage: CachedNetworkImageProvider(
+                                avatarUrl,
+                              ),
                             ),
                           ],
                         ),
