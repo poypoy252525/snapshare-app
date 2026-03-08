@@ -1,44 +1,45 @@
 import 'package:equatable/equatable.dart';
+import 'author.dart';
 
 class Post extends Equatable {
   final String id;
-  final String userId;
-  final String username;
-  final String userImageUrl;
+  final String? title;
   final String content;
-  final String? imageUrl;
+  final String? image;
   final DateTime createdAt;
-  final bool isVerified;
-  final int likesCount;
+  final DateTime updatedAt;
+  final Author author;
+  final String authorUsername;
+  final String authorId;
   final int commentsCount;
-  final int repostsCount;
+  final int likesCount;
 
   const Post({
     required this.id,
-    required this.userId,
-    required this.username,
-    required this.userImageUrl,
+    this.title,
     required this.content,
-    this.imageUrl,
+    this.image,
     required this.createdAt,
-    this.isVerified = false,
-    this.likesCount = 0,
-    this.commentsCount = 0,
-    this.repostsCount = 0,
+    required this.updatedAt,
+    required this.author,
+    required this.authorUsername,
+    required this.authorId,
+    required this.commentsCount,
+    required this.likesCount,
   });
 
   @override
   List<Object?> get props => [
     id,
-    userId,
-    username,
-    userImageUrl,
+    title,
     content,
-    imageUrl,
+    image,
     createdAt,
-    isVerified,
-    likesCount,
+    updatedAt,
+    author,
+    authorUsername,
+    authorId,
     commentsCount,
-    repostsCount,
+    likesCount,
   ];
 }

@@ -31,19 +31,20 @@ class PostCard extends StatelessWidget {
                       color: Colors.grey[300],
                     ),
                     child: ClipOval(
-                      child: Image.network(
-                        post.userImageUrl,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => Center(
-                          child: Text(
-                            post.username[0].toUpperCase(),
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontWeight: FontWeight.bold,
+                      child: post.author.avatar != null
+                          ? Image.network(
+                              post.author.avatar!,
+                              fit: BoxFit.cover,
+                            )
+                          : Center(
+                              child: Text(
+                                post.authorUsername[0].toUpperCase(),
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
                     ),
                   ),
                   Positioned(
@@ -80,17 +81,13 @@ class PostCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      post.username,
+                      post.authorUsername,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
                         color: textColor,
                       ),
                     ),
-                    if (post.isVerified) ...[
-                      const SizedBox(width: 4),
-                      const Icon(Icons.verified, size: 14, color: Colors.blue),
-                    ],
                     const Spacer(),
                     Text(
                       _formatTime(post.createdAt),
@@ -106,12 +103,12 @@ class PostCard extends StatelessWidget {
                   post.content,
                   style: TextStyle(fontSize: 14, color: textColor, height: 1.3),
                 ),
-                if (post.imageUrl != null) ...[
+                if (post.image != null) ...[
                   const SizedBox(height: 12),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: Image.network(
-                      post.imageUrl!,
+                      post.image!,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) => Container(
                         height: 200,

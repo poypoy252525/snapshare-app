@@ -1,49 +1,50 @@
 import '../../domain/entities/post.dart';
+import 'author_model.dart';
 
 class PostModel extends Post {
   const PostModel({
     required super.id,
-    required super.userId,
-    required super.username,
-    required super.userImageUrl,
+    super.title,
     required super.content,
-    super.imageUrl,
+    super.image,
     required super.createdAt,
-    super.isVerified,
-    super.likesCount,
-    super.commentsCount,
-    super.repostsCount,
+    required super.updatedAt,
+    required super.author,
+    required super.authorUsername,
+    required super.authorId,
+    required super.commentsCount,
+    required super.likesCount,
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
     return PostModel(
       id: json['id'],
-      userId: json['userId'],
-      username: json['username'],
-      userImageUrl: json['userImageUrl'],
+      title: json['title'],
       content: json['content'],
-      imageUrl: json['imageUrl'],
-      createdAt: DateTime.parse(json['createdAt']),
-      isVerified: json['isVerified'] ?? false,
-      likesCount: json['likesCount'] ?? 0,
-      commentsCount: json['commentsCount'] ?? 0,
-      repostsCount: json['repostsCount'] ?? 0,
+      image: json['image'],
+      createdAt: DateTime.parse(json['created_at']),
+      updatedAt: DateTime.parse(json['updated_at']),
+      author: AuthorModel.fromJson(json['author']),
+      authorUsername: json['author_username'],
+      authorId: json['author_id'],
+      commentsCount: json['comments_count'] ?? 0,
+      likesCount: json['likes_count'] ?? 0,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'userId': userId,
-      'username': username,
-      'userImageUrl': userImageUrl,
+      'title': title,
       'content': content,
-      'imageUrl': imageUrl,
-      'createdAt': createdAt.toIso8601String(),
-      'isVerified': isVerified,
-      'likesCount': likesCount,
-      'commentsCount': commentsCount,
-      'repostsCount': repostsCount,
+      'image': image,
+      'created_at': createdAt.toIso8601String(),
+      'updated_at': updatedAt.toIso8601String(),
+      'author': (author as AuthorModel).toJson(),
+      'author_username': authorUsername,
+      'author_id': authorId,
+      'comments_count': commentsCount,
+      'likes_count': likesCount,
     };
   }
 }

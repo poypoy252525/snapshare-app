@@ -1,4 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'features/posts/data/datasources/post_remote_datasource.dart';
 import 'features/posts/data/repositories/post_repository_impl.dart';
 import 'features/posts/domain/repositories/post_repository.dart';
 import 'features/posts/domain/usecases/get_posts.dart';
@@ -12,10 +14,16 @@ import 'features/auth/domain/usecases/login_usecase.dart';
 import 'features/auth/domain/usecases/logout_usecase.dart';
 import 'features/auth/domain/usecases/signup_usecase.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
+import 'core/network/api_constants.dart';
 
 final sl = GetIt.instance;
 
 Future<void> init() async {
+  // Core
+  sl.registerLazySingleton(
+    () => Dio(BaseOptions(baseUrl: ApiConstants.baseUrl)),
+  );
+
   // Features - Navigation
   sl.registerLazySingleton(() => NavigationCubit());
 
@@ -52,5 +60,12 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetPosts(sl()));
 
   // Repository
-  sl.registerLazySingleton<PostRepository>(() => PostRepositoryImpl());
+  sl.registerLazySingleton<PostRepository>(
+    () => PostRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // Data sources
+  sl.registerLazySingleton<PostRemoteDataSource>(
+    () => PostRemoteDataSourceImpl(dio: sl()),
+  );
 }
