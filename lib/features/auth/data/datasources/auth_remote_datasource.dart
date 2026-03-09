@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:snapshare/core/network/api_constants.dart';
+import 'package:snapshare/core/error/exceptions.dart';
 import 'package:snapshare/features/auth/data/models/auth_response_model.dart';
 import 'package:snapshare/features/auth/data/models/user_model.dart';
 import 'package:snapshare/features/auth/domain/entities/user.dart';
@@ -46,6 +47,16 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         return _currentUser;
       }
       return null;
+    } on DioException catch (e) {
+      if (e.response != null && e.response!.data != null) {
+        final data = e.response!.data;
+        if (data is Map && data.containsKey('non_field_errors')) {
+          throw ServerException(data['non_field_errors'][0]);
+        } else if (data is Map && data.containsKey('detail')) {
+          throw ServerException(data['detail']);
+        }
+      }
+      rethrow;
     } catch (e) {
       rethrow;
     }
@@ -79,6 +90,23 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         }
       }
       return null;
+    } on DioException catch (e) {
+      if (e.response != null && e.response!.data != null) {
+        final data = e.response!.data;
+        // Basic error extraction
+        if (data is Map) {
+          if (data.containsKey('non_field_errors')) {
+            throw ServerException(data['non_field_errors'][0]);
+          } else if (data.containsKey('email')) {
+            throw ServerException(data['email'][0]);
+          } else if (data.containsKey('username')) {
+            throw ServerException(data['username'][0]);
+          } else if (data.containsKey('detail')) {
+            throw ServerException(data['detail']);
+          }
+        }
+      }
+      rethrow;
     } catch (e) {
       rethrow;
     }

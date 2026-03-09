@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:snapshare/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:snapshare/core/presentation/widgets/snapshare_image.dart';
 
 class CreatePostBottomSheet extends StatefulWidget {
   const CreatePostBottomSheet({super.key});
@@ -43,11 +43,11 @@ class _CreatePostBottomSheetState extends State<CreatePostBottomSheet> {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         String username = 'user';
-        String avatarUrl = 'https://i.pravatar.cc/150?u=user';
+        String? avatarUrl;
 
         if (state is Authenticated) {
           username = state.user.username;
-          avatarUrl = 'https://i.pravatar.cc/150?u=$username';
+          avatarUrl = state.user.avatar;
         }
 
         return Container(
@@ -77,7 +77,7 @@ class _CreatePostBottomSheetState extends State<CreatePostBottomSheet> {
                       ),
                     ),
                     Text(
-                      'New posts',
+                      'New post',
                       style: TextStyle(
                         color: textColor,
                         fontSize: 18,
@@ -107,12 +107,27 @@ class _CreatePostBottomSheetState extends State<CreatePostBottomSheet> {
                         // User Avatar & Line
                         Column(
                           children: [
-                            CircleAvatar(
-                              radius: 18,
-                              backgroundImage: CachedNetworkImageProvider(
-                                avatarUrl,
+                            if (avatarUrl != null)
+                              SnapShareImage(
+                                imageUrl: avatarUrl,
+                                width: 36,
+                                height: 36,
+                                shape: SnapShareImageShape.circle,
+                              )
+                            else
+                              CircleAvatar(
+                                radius: 18,
+                                backgroundColor: isDarkMode
+                                    ? Colors.grey[800]
+                                    : Colors.grey[200],
+                                child: Text(
+                                  username[0].toUpperCase(),
+                                  style: TextStyle(
+                                    color: secondaryTextColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
-                            ),
                             Expanded(
                               child: Container(
                                 width: 2,
@@ -122,12 +137,28 @@ class _CreatePostBottomSheetState extends State<CreatePostBottomSheet> {
                                 margin: const EdgeInsets.symmetric(vertical: 4),
                               ),
                             ),
-                            CircleAvatar(
-                              radius: 10,
-                              backgroundImage: CachedNetworkImageProvider(
-                                avatarUrl,
+                            if (avatarUrl != null)
+                              SnapShareImage(
+                                imageUrl: avatarUrl,
+                                width: 20,
+                                height: 20,
+                                shape: SnapShareImageShape.circle,
+                              )
+                            else
+                              CircleAvatar(
+                                radius: 10,
+                                backgroundColor: isDarkMode
+                                    ? Colors.grey[800]
+                                    : Colors.grey[200],
+                                child: Text(
+                                  username[0].toUpperCase(),
+                                  style: TextStyle(
+                                    color: secondaryTextColor,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
-                            ),
                           ],
                         ),
                         const SizedBox(width: 12),

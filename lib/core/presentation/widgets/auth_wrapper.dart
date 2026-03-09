@@ -13,10 +13,12 @@ class AuthWrapper extends StatelessWidget {
       builder: (context, state) {
         if (state is Authenticated) {
           return const BottomNavBarPage();
-        } else if (state is Unauthenticated || state is AuthError) {
+        } else if (state is Unauthenticated ||
+            state is AuthError ||
+            state is AuthLoading) {
           return const LoginPage();
         } else {
-          // AuthInitial or AuthLoading
+          // AuthInitial
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
