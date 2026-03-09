@@ -8,16 +8,14 @@ class SignUpUseCase {
 
   Future<User?> call({
     required String email,
-    required String password,
-    required String firstName,
-    required String lastName,
+    required String password1,
+    required String password2,
     required String username,
   }) {
     return repository.signUp(
       email: email,
-      password: password,
-      firstName: firstName,
-      lastName: lastName,
+      password1: password1,
+      password2: password2,
       username: username,
     );
   }

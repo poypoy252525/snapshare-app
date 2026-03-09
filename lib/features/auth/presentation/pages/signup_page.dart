@@ -11,19 +11,17 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  final _firstNameController = TextEditingController();
-  final _lastNameController = TextEditingController();
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final _password1Controller = TextEditingController();
+  final _password2Controller = TextEditingController();
 
   @override
   void dispose() {
-    _firstNameController.dispose();
-    _lastNameController.dispose();
     _usernameController.dispose();
     _emailController.dispose();
-    _passwordController.dispose();
+    _password1Controller.dispose();
+    _password2Controller.dispose();
     super.dispose();
   }
 
@@ -79,28 +77,6 @@ class _SignupPageState extends State<SignupPage> {
                     style: TextStyle(fontSize: 16, color: subTextColor),
                   ),
                   const SizedBox(height: 32),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildTextField(
-                          controller: _firstNameController,
-                          hintText: 'First Name',
-                          icon: CupertinoIcons.person,
-                          isDarkMode: isDarkMode,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _buildTextField(
-                          controller: _lastNameController,
-                          hintText: 'Last Name',
-                          icon: CupertinoIcons.person,
-                          isDarkMode: isDarkMode,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
                   _buildTextField(
                     controller: _usernameController,
                     hintText: 'Username',
@@ -116,8 +92,16 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   const SizedBox(height: 16),
                   _buildTextField(
-                    controller: _passwordController,
+                    controller: _password1Controller,
                     hintText: 'Password',
+                    icon: CupertinoIcons.lock,
+                    isPassword: true,
+                    isDarkMode: isDarkMode,
+                  ),
+                  const SizedBox(height: 16),
+                  _buildTextField(
+                    controller: _password2Controller,
+                    hintText: 'Confirm Password',
                     icon: CupertinoIcons.lock,
                     isPassword: true,
                     isDarkMode: isDarkMode,
@@ -133,9 +117,8 @@ class _SignupPageState extends State<SignupPage> {
                               context.read<AuthBloc>().add(
                                 SignUpRequested(
                                   email: _emailController.text,
-                                  password: _passwordController.text,
-                                  firstName: _firstNameController.text,
-                                  lastName: _lastNameController.text,
+                                  password1: _password1Controller.text,
+                                  password2: _password2Controller.text,
                                   username: _usernameController.text,
                                 ),
                               );

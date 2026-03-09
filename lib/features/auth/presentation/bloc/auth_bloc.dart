@@ -67,9 +67,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       final user = await signUpUseCase(
         email: event.email,
-        password: event.password,
-        firstName: event.firstName,
-        lastName: event.lastName,
+        password1: event.password1,
+        password2: event.password2,
         username: event.username,
       );
       if (user != null) {
