@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snapshare/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:snapshare/features/posts/presentation/bloc/post_bloc.dart';
+import 'package:snapshare/features/posts/presentation/bloc/post_event.dart';
+import 'package:snapshare/features/posts/presentation/bloc/post_state.dart';
 import 'package:snapshare/core/presentation/widgets/snapshare_image.dart';
 
 class CreatePostBottomSheet extends StatefulWidget {
@@ -41,272 +44,317 @@ class _CreatePostBottomSheetState extends State<CreatePostBottomSheet> {
         : Colors.grey[600]!;
 
     return BlocBuilder<AuthBloc, AuthState>(
-      builder: (context, state) {
+      builder: (context, authState) {
         String username = 'user';
         String? avatarUrl;
 
-        if (state is Authenticated) {
-          username = state.user.username;
-          avatarUrl = state.user.avatar;
+        if (authState is Authenticated) {
+          username = authState.user.username;
+          avatarUrl = authState.user.avatar;
         }
 
-        return Container(
-          height:
-              MediaQuery.of(context).size.height -
-              MediaQuery.of(context).padding.top,
-          decoration: BoxDecoration(
-            color: bgColor,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-          ),
-          child: Column(
-            children: [
-              // Header
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text(
-                        'Cancel',
-                        style: TextStyle(color: textColor, fontSize: 16),
-                      ),
-                    ),
-                    Text(
-                      'New post',
-                      style: TextStyle(
-                        color: textColor,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const Row(
-                      children: [
-                        Icon(CupertinoIcons.square_list, size: 22),
-                        SizedBox(width: 16),
-                        Icon(CupertinoIcons.ellipsis_circle, size: 22),
-                      ],
-                    ),
-                  ],
-                ),
+        return BlocListener<PostBloc, PostState>(
+          listener: (context, state) {
+            if (state is PostCreated) {
+              Navigator.pop(context);
+              context.read<PostBloc>().add(GetPostsEvent());
+            } else if (state is PostError) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(state.message)));
+            }
+          },
+          child: Container(
+            height:
+                MediaQuery.of(context).size.height -
+                MediaQuery.of(context).padding.top,
+            decoration: BoxDecoration(
+              color: bgColor,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
               ),
-              const Divider(height: 1, thickness: 0.5),
-
-              // Content
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(16),
-                  child: IntrinsicHeight(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // User Avatar & Line
-                        Column(
-                          children: [
-                            if (avatarUrl != null)
-                              SnapShareImage(
-                                imageUrl: avatarUrl,
-                                width: 36,
-                                height: 36,
-                                shape: SnapShareImageShape.circle,
-                              )
-                            else
-                              CircleAvatar(
-                                radius: 18,
-                                backgroundColor: isDarkMode
-                                    ? Colors.grey[800]
-                                    : Colors.grey[200],
-                                child: Text(
-                                  username[0].toUpperCase(),
-                                  style: TextStyle(
-                                    color: secondaryTextColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            Expanded(
-                              child: Container(
-                                width: 2,
-                                color: isDarkMode
-                                    ? Colors.grey[800]
-                                    : Colors.grey[300],
-                                margin: const EdgeInsets.symmetric(vertical: 4),
-                              ),
-                            ),
-                            if (avatarUrl != null)
-                              SnapShareImage(
-                                imageUrl: avatarUrl,
-                                width: 20,
-                                height: 20,
-                                shape: SnapShareImageShape.circle,
-                              )
-                            else
-                              CircleAvatar(
-                                radius: 10,
-                                backgroundColor: isDarkMode
-                                    ? Colors.grey[800]
-                                    : Colors.grey[200],
-                                child: Text(
-                                  username[0].toUpperCase(),
-                                  style: TextStyle(
-                                    color: secondaryTextColor,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                          ],
+            ),
+            child: Column(
+              children: [
+                // Header
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(color: textColor, fontSize: 16),
                         ),
-                        const SizedBox(width: 12),
+                      ),
+                      Text(
+                        'New post',
+                        style: TextStyle(
+                          color: textColor,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const Row(
+                        children: [
+                          Icon(CupertinoIcons.square_list, size: 22),
+                          SizedBox(width: 16),
+                          Icon(CupertinoIcons.ellipsis_circle, size: 22),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const Divider(height: 1, thickness: 0.5),
 
-                        // Input Area
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                // Content
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(16),
+                    child: IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // User Avatar & Line
+                          Column(
                             children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    username,
+                              if (avatarUrl != null)
+                                SnapShareImage(
+                                  imageUrl: avatarUrl,
+                                  width: 36,
+                                  height: 36,
+                                  shape: SnapShareImageShape.circle,
+                                )
+                              else
+                                CircleAvatar(
+                                  radius: 18,
+                                  backgroundColor: isDarkMode
+                                      ? Colors.grey[800]
+                                      : Colors.grey[200],
+                                  child: Text(
+                                    username.isNotEmpty
+                                        ? username[0].toUpperCase()
+                                        : 'U',
                                     style: TextStyle(
-                                      color: textColor,
+                                      color: secondaryTextColor,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  const SizedBox(width: 4),
-                                  Icon(
-                                    CupertinoIcons.chevron_right,
-                                    size: 12,
-                                    color: secondaryTextColor,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    'Add a topic',
-                                    style: TextStyle(color: secondaryTextColor),
-                                  ),
-                                ],
-                              ),
-                              TextField(
-                                controller: _controller,
-                                maxLines: null,
-                                autofocus: true,
-                                style: TextStyle(
-                                  color: textColor,
-                                  fontSize: 16,
                                 ),
-                                decoration: InputDecoration(
-                                  hintText: "What's new?",
-                                  hintStyle: TextStyle(
-                                    color: secondaryTextColor,
-                                  ),
-                                  border: InputBorder.none,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 8,
+                              Expanded(
+                                child: Container(
+                                  width: 2,
+                                  color: isDarkMode
+                                      ? Colors.grey[800]
+                                      : Colors.grey[300],
+                                  margin: const EdgeInsets.symmetric(
+                                    vertical: 4,
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 8),
-                              Row(
-                                children: [
-                                  _IconButton(
-                                    icon: CupertinoIcons.photo,
-                                    color: secondaryTextColor,
-                                  ),
-                                  _IconButton(
-                                    icon: CupertinoIcons.smiley,
-                                    color: secondaryTextColor,
-                                  ),
-                                  _IconButton(
-                                    icon: CupertinoIcons.chart_bar,
-                                    color: secondaryTextColor,
-                                  ),
-                                  _IconButton(
-                                    icon: CupertinoIcons.location,
-                                    color: secondaryTextColor,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                'Add to thread',
-                                style: TextStyle(
-                                  color: secondaryTextColor.withAlpha(
-                                    (255 * 0.6).toInt(),
+                              if (avatarUrl != null)
+                                SnapShareImage(
+                                  imageUrl: avatarUrl,
+                                  width: 20,
+                                  height: 20,
+                                  shape: SnapShareImageShape.circle,
+                                )
+                              else
+                                CircleAvatar(
+                                  radius: 10,
+                                  backgroundColor: isDarkMode
+                                      ? Colors.grey[800]
+                                      : Colors.grey[200],
+                                  child: Text(
+                                    username.isNotEmpty
+                                        ? username[0].toUpperCase()
+                                        : 'U',
+                                    style: TextStyle(
+                                      color: secondaryTextColor,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
-                              ),
                             ],
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 12),
+
+                          // Input Area
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      username,
+                                      style: TextStyle(
+                                        color: textColor,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Icon(
+                                      CupertinoIcons.chevron_right,
+                                      size: 12,
+                                      color: secondaryTextColor,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      'Add a topic',
+                                      style: TextStyle(
+                                        color: secondaryTextColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                TextField(
+                                  controller: _controller,
+                                  maxLines: null,
+                                  autofocus: true,
+                                  style: TextStyle(
+                                    color: textColor,
+                                    fontSize: 16,
+                                  ),
+                                  decoration: InputDecoration(
+                                    hintText: "What's new?",
+                                    hintStyle: TextStyle(
+                                      color: secondaryTextColor,
+                                    ),
+                                    border: InputBorder.none,
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 8,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    _IconButton(
+                                      icon: CupertinoIcons.photo,
+                                      color: secondaryTextColor,
+                                    ),
+                                    _IconButton(
+                                      icon: CupertinoIcons.smiley,
+                                      color: secondaryTextColor,
+                                    ),
+                                    _IconButton(
+                                      icon: CupertinoIcons.chart_bar,
+                                      color: secondaryTextColor,
+                                    ),
+                                    _IconButton(
+                                      icon: CupertinoIcons.location,
+                                      color: secondaryTextColor,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'Add to thread',
+                                  style: TextStyle(
+                                    color: secondaryTextColor.withAlpha(
+                                      (255 * 0.6).toInt(),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
 
-              const Divider(height: 1, thickness: 0.5),
-              // Bottom Bar
-              Padding(
-                padding: EdgeInsets.fromLTRB(
-                  16,
-                  8,
-                  16,
-                  16 +
-                      (MediaQuery.of(context).viewInsets.bottom > 0
-                          ? MediaQuery.of(context).viewInsets.bottom
-                          : MediaQuery.of(context).padding.bottom),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          CupertinoIcons.arrow_up_arrow_down,
-                          size: 16,
-                          color: secondaryTextColor,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Reply options',
-                          style: TextStyle(color: secondaryTextColor),
-                        ),
-                      ],
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Post action
-                        Navigator.pop(context);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: isDarkMode
-                            ? Colors.white
-                            : Colors.black,
-                        foregroundColor: isDarkMode
-                            ? Colors.black
-                            : Colors.white,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 8,
-                        ),
+                const Divider(height: 1, thickness: 0.5),
+                // Bottom Bar
+                Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    16,
+                    8,
+                    16,
+                    16 +
+                        (MediaQuery.of(context).viewInsets.bottom > 0
+                            ? MediaQuery.of(context).viewInsets.bottom
+                            : MediaQuery.of(context).padding.bottom),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            CupertinoIcons.arrow_up_arrow_down,
+                            size: 16,
+                            color: secondaryTextColor,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Reply options',
+                            style: TextStyle(color: secondaryTextColor),
+                          ),
+                        ],
                       ),
-                      child: const Text(
-                        'Post',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                      BlocBuilder<PostBloc, PostState>(
+                        builder: (context, postState) {
+                          final bool isLoading = postState is PostCreating;
+
+                          return ElevatedButton(
+                            onPressed: isLoading
+                                ? null
+                                : () {
+                                    final content = _controller.text.trim();
+                                    if (content.isNotEmpty) {
+                                      context.read<PostBloc>().add(
+                                        CreatePostEvent(content: content),
+                                      );
+                                    }
+                                  },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: isDarkMode
+                                  ? Colors.white
+                                  : Colors.black,
+                              foregroundColor: isDarkMode
+                                  ? Colors.black
+                                  : Colors.white,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                                vertical: 8,
+                              ),
+                            ),
+                            child: isLoading
+                                ? const SizedBox(
+                                    width: 16,
+                                    height: 16,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Colors.grey,
+                                    ),
+                                  )
+                                : const Text(
+                                    'Post',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                          );
+                        },
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },

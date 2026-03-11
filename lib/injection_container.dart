@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get_it/get_it.dart';
 import 'package:snapshare/features/posts/data/datasources/post_remote_datasource.dart';
 import 'package:snapshare/features/posts/data/repositories/post_repository_impl.dart';
 import 'package:snapshare/features/posts/domain/repositories/post_repository.dart';
 import 'package:snapshare/features/posts/domain/usecases/get_posts.dart';
+import 'package:snapshare/features/posts/domain/usecases/create_post.dart';
 import 'package:snapshare/features/posts/presentation/bloc/post_bloc.dart';
 import 'package:snapshare/features/navigation/presentation/cubit/navigation_cubit.dart';
 import 'package:snapshare/features/auth/data/datasources/auth_remote_datasource.dart';
@@ -20,15 +22,38 @@ final sl = GetIt.instance;
 
 Future<void> init() async {
   // Core
-  sl.registerLazySingleton(
-    () => Dio(
+  final sharedPreferences = await SharedPreferences.getInstance();
+  sl.registerLazySingleton(() => sharedPreferences);
+
+  sl.registerLazySingleton(() {
+    final dio = Dio(
       BaseOptions(
         baseUrl: ApiConstants.baseUrl,
         connectTimeout: const Duration(seconds: 5),
         receiveTimeout: const Duration(seconds: 5),
       ),
-    ),
-  );
+    );
+
+    dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          // Do not add token for login or registration endpoints
+          if (options.path.contains(ApiConstants.loginEndpoint) ||
+              options.path.contains(ApiConstants.registrationEndpoint)) {
+            return handler.next(options);
+          }
+
+          final token = sl<SharedPreferences>().getString('access_token');
+          if (token != null) {
+            options.headers['Authorization'] = 'Bearer $token';
+          }
+          return handler.next(options);
+        },
+      ),
+    );
+
+    return dio;
+  });
 
   // Features - Navigation
   sl.registerLazySingleton(() => NavigationCubit());
@@ -60,10 +85,11 @@ Future<void> init() async {
 
   // Features - Posts
   // Bloc
-  sl.registerFactory(() => PostBloc(getPosts: sl()));
+  sl.registerFactory(() => PostBloc(getPosts: sl(), createPost: sl()));
 
   // Use cases
   sl.registerLazySingleton(() => GetPosts(sl()));
+  sl.registerLazySingleton(() => CreatePost(sl()));
 
   // Repository
   sl.registerLazySingleton<PostRepository>(

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snapshare/core/presentation/widgets/auth_wrapper.dart';
 import 'package:snapshare/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:snapshare/features/posts/presentation/bloc/post_bloc.dart';
+import 'package:snapshare/features/posts/presentation/bloc/post_event.dart';
 import 'injection_container.dart' as di;
 import 'injection_container.dart';
 
@@ -17,8 +19,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<AuthBloc>()..add(AuthCheckRequested()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => sl<AuthBloc>()..add(AuthCheckRequested()),
+        ),
+        BlocProvider(create: (context) => sl<PostBloc>()..add(GetPostsEvent())),
+      ],
       child: MaterialApp(
         title: 'SnapShare',
         debugShowCheckedModeBanner: false,

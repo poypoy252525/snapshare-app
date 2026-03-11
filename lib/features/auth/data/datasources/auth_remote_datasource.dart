@@ -4,6 +4,8 @@ import 'package:snapshare/core/error/exceptions.dart';
 import 'package:snapshare/features/auth/data/models/auth_response_model.dart';
 import 'package:snapshare/features/auth/data/models/user_model.dart';
 import 'package:snapshare/features/auth/domain/entities/user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:snapshare/injection_container.dart';
 
 abstract class AuthRemoteDataSource {
   Future<User?> login({required String email, required String password});
@@ -31,19 +33,17 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       final response = await dio.post(
         ApiConstants.loginEndpoint,
-        data: {
-          'username': email.split(
-            '@',
-          )[0], // Backend expects username or email? Using email for now if it's the identifier
-          'email': email,
-          'password': password,
-        },
+        data: {'email': email, 'password': password},
       );
 
       if (response.statusCode == 200) {
         final authResponse = AuthResponseModel.fromJson(response.data);
         _currentUser = authResponse.user;
-        // NOTE: In a real app, we should save these tokens to local storage
+
+        final prefs = sl<SharedPreferences>();
+        await prefs.setString('access_token', authResponse.accessToken);
+        await prefs.setString('refresh_token', authResponse.refreshToken);
+
         return _currentUser;
       }
       return null;
@@ -83,11 +83,20 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (response.statusCode == 201 || response.statusCode == 200) {
         // Backend might return user directly or require login after registration
         // Assuming it returns the user object as per common patterns if successful
+        UserModel? user;
         if (response.data['user'] != null) {
-          return UserModel.fromJson(response.data['user']);
+          user = UserModel.fromJson(response.data['user']);
         } else if (response.data['pk'] != null) {
-          return UserModel.fromJson(response.data);
+          user = UserModel.fromJson(response.data);
         }
+
+        if (user != null && response.data['access'] != null) {
+          final prefs = sl<SharedPreferences>();
+          await prefs.setString('access_token', response.data['access']);
+          await prefs.setString('refresh_token', response.data['refresh']);
+          _currentUser = user;
+        }
+        return user;
       }
       return null;
     } on DioException catch (e) {
@@ -114,7 +123,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<void> logout() async {
-    // Implement server-side logout if needed
+    final prefs = sl<SharedPreferences>();
+    await prefs.remove('access_token');
+    await prefs.remove('refresh_token');
     _currentUser = null;
   }
 

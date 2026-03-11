@@ -12,4 +12,9 @@ class PostRepositoryImpl implements PostRepository {
     final response = await remoteDataSource.getPosts();
     return response.results;
   }
+
+  @override
+  Future<Post> createPost(String content) async {
+    return await remoteDataSource.createPost(content);
+  }
 }
