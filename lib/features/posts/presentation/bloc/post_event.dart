@@ -11,9 +11,11 @@ class GetPostsEvent extends PostEvent {}
 
 class CreatePostEvent extends PostEvent {
   final String content;
+  final dynamic image;
 
-  const CreatePostEvent({required this.content});
+  const CreatePostEvent({required this.content, this.image});
 
   @override
-  List<Object?> get props => [content];
+  List<Object?> get props => [content, image];
 }
+

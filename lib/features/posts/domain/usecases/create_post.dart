@@ -6,7 +6,7 @@ class CreatePost {
 
   CreatePost(this.repository);
 
-  Future<Post> call(String content) async {
-    return await repository.createPost(content);
+  Future<Post> call(String content, {dynamic image}) async {
+    return await repository.createPost(content, image: image);
   }
 }

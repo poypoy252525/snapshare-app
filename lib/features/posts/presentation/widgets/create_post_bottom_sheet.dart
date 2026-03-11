@@ -1,5 +1,8 @@
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snapshare/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:snapshare/features/posts/presentation/bloc/post_bloc.dart';
@@ -27,11 +30,28 @@ class CreatePostBottomSheet extends StatefulWidget {
 
 class _CreatePostBottomSheetState extends State<CreatePostBottomSheet> {
   final TextEditingController _controller = TextEditingController();
+  XFile? _selectedImage;
 
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _selectedImage = pickedFile;
+      });
+    }
+  }
+
+  void _removeImage() {
+    setState(() {
+      _selectedImage = null;
+    });
   }
 
   @override
@@ -233,12 +253,54 @@ class _CreatePostBottomSheetState extends State<CreatePostBottomSheet> {
                                     ),
                                   ),
                                 ),
+                                if (_selectedImage != null)
+                                  Stack(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 8, bottom: 8),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(12),
+                                          child: kIsWeb
+                                              ? Image.network(
+                                                  _selectedImage!.path,
+                                                  width: double.infinity,
+                                                  fit: BoxFit.cover,
+                                                )
+                                              : Image.file(
+                                                  File(_selectedImage!.path),
+                                                  width: double.infinity,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        top: 16,
+                                        right: 8,
+                                        child: GestureDetector(
+                                          onTap: _removeImage,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.black.withOpacity(0.6),
+                                              shape: BoxShape.circle,
+                                            ),
+                                            padding: const EdgeInsets.all(4),
+                                            child: const Icon(
+                                              CupertinoIcons.xmark,
+                                              color: Colors.white,
+                                              size: 16,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 const SizedBox(height: 8),
                                 Row(
                                   children: [
                                     _IconButton(
                                       icon: CupertinoIcons.photo,
                                       color: secondaryTextColor,
+                                      onTap: _pickImage,
                                     ),
                                     _IconButton(
                                       icon: CupertinoIcons.smiley,
@@ -310,9 +372,12 @@ class _CreatePostBottomSheetState extends State<CreatePostBottomSheet> {
                                 ? null
                                 : () {
                                     final content = _controller.text.trim();
-                                    if (content.isNotEmpty) {
+                                    if (content.isNotEmpty || _selectedImage != null) {
                                       context.read<PostBloc>().add(
-                                        CreatePostEvent(content: content),
+                                        CreatePostEvent(
+                                          content: content,
+                                          image: _selectedImage,
+                                        ),
                                       );
                                     }
                                   },
@@ -365,15 +430,16 @@ class _CreatePostBottomSheetState extends State<CreatePostBottomSheet> {
 class _IconButton extends StatelessWidget {
   final IconData icon;
   final Color color;
+  final VoidCallback? onTap;
 
-  const _IconButton({required this.icon, required this.color});
+  const _IconButton({required this.icon, required this.color, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(right: 16),
       child: GestureDetector(
-        onTap: () {},
+        onTap: onTap ?? () {},
         child: Icon(icon, color: color, size: 18),
       ),
     );

@@ -6,7 +6,7 @@ import '../models/post_response_model.dart';
 
 abstract class PostRemoteDataSource {
   Future<PostResponseModel> getPosts({int? limit, int? offset});
-  Future<PostModel> createPost(String content);
+  Future<PostModel> createPost(String content, {dynamic image});
 }
 
 class PostRemoteDataSourceImpl implements PostRemoteDataSource {
@@ -15,11 +15,25 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   PostRemoteDataSourceImpl({required this.dio});
 
   @override
-  Future<PostModel> createPost(String content) async {
+  Future<PostModel> createPost(String content, {dynamic image}) async {
     try {
+      dynamic data;
+      
+      if (image != null) {
+        data = FormData.fromMap({
+          'content': content,
+          'image': await MultipartFile.fromBytes(
+            await image.readAsBytes(),
+            filename: image.name,
+          ),
+        });
+      } else {
+        data = {'content': content, 'image': null};
+      }
+
       final response = await dio.post(
         ApiConstants.postsEndpoint,
-        data: {'content': content, 'image': null},
+        data: data,
       );
 
       if (response.statusCode == 201 || response.statusCode == 200) {

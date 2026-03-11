@@ -14,7 +14,7 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   @override
-  Future<Post> createPost(String content) async {
-    return await remoteDataSource.createPost(content);
+  Future<Post> createPost(String content, {dynamic image}) async {
+    return await remoteDataSource.createPost(content, image: image);
   }
 }

@@ -26,7 +26,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     on<CreatePostEvent>((event, emit) async {
       emit(PostCreating());
       try {
-        final post = await createPost(event.content);
+        final post = await createPost(event.content, image: event.image);
         emit(PostCreated(post: post));
       } catch (e) {
         emit(PostError(message: e.toString()));
