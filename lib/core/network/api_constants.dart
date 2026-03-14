@@ -26,4 +26,7 @@ class ApiConstants {
   static const String postsEndpoint = '/api/posts/';
   static const String loginEndpoint = '/api/auth/login/';
   static const String registrationEndpoint = '/api/auth/registration/';
+  static const String tokenVerifyEndpoint = '/api/auth/token/verify/';
+  static const String tokenRefreshEndpoint = '/api/auth/token/refresh/';
+  static const String currentUserEndpoint = '/api/auth/user/';
 }
