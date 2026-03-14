@@ -8,6 +8,9 @@ class ApiConstants {
   /// - Android Emulator: uses 10.0.2.2 (special alias for host localhost)
   /// - Real Device/iOS: Use your machine's local IP (e.g., 192.168.1.x)
   static String get baseUrl {
+    if (kReleaseMode) {
+      return 'https://snapshare.carljeffersondelfin.com';
+    }
     if (kIsWeb) {
       return 'http://localhost:8000';
     } else if (Platform.isAndroid) {
