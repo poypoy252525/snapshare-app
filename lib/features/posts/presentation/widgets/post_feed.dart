@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snapshare/features/navigation/presentation/cubit/navigation_cubit.dart';
 import 'package:snapshare/core/presentation/widgets/scroll_delta_listener.dart';
 import '../bloc/post_bloc.dart';
+import '../bloc/post_event.dart';
 import '../bloc/post_state.dart';
 import 'post_card.dart';
 
@@ -23,18 +24,28 @@ class PostFeed extends StatelessWidget {
           if (state is PostLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is PostLoaded) {
-            return ListView.separated(
-              cacheExtent: 1000,
-              padding: const EdgeInsets.symmetric(vertical: 0),
-              itemCount: state.posts.length,
-              separatorBuilder: (context, index) => Divider(
-                color: Colors.grey.withValues(alpha: 0.2),
-                thickness: 0.5,
-                height: 1,
-              ),
-              itemBuilder: (context, index) {
-                return PostCard(post: state.posts[index]);
+            return RefreshIndicator(
+              onRefresh: () async {
+                context.read<PostBloc>().add(GetPostsEvent());
+                // Wait until the bloc leaves the PostLoaded state (i.e. loading
+                // has started) so the indicator has a chance to animate.
+                await context.read<PostBloc>().stream.firstWhere(
+                  (s) => s is! PostLoaded,
+                );
               },
+              child: ListView.separated(
+                cacheExtent: 1000,
+                padding: const EdgeInsets.symmetric(vertical: 0),
+                itemCount: state.posts.length,
+                separatorBuilder: (context, index) => Divider(
+                  color: Colors.grey.withValues(alpha: 0.2),
+                  thickness: 0.5,
+                  height: 1,
+                ),
+                itemBuilder: (context, index) {
+                  return PostCard(post: state.posts[index]);
+                },
+              ),
             );
           } else if (state is PostError) {
             return Center(
@@ -48,7 +59,7 @@ class PostFeed extends StatelessWidget {
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () {
-                      // Logic for retry could go here if event is accessible
+                      context.read<PostBloc>().add(GetPostsEvent());
                     },
                     child: const Text('Retry'),
                   ),

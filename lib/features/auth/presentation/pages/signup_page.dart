@@ -115,7 +115,7 @@ class _SignupPageState extends State<SignupPage> {
                       decoration: BoxDecoration(
                         color: isDarkMode
                             ? Colors.white10
-                            : Colors.black.withOpacity(0.05),
+                            : Colors.black.withValues(alpha: 0.05),
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Icon(
@@ -295,7 +295,7 @@ class _SignupPageState extends State<SignupPage> {
             border: Border.all(
               color: isDarkMode
                   ? Colors.white10
-                  : Colors.black.withOpacity(0.05),
+                  : Colors.black.withValues(alpha: 0.05),
               width: 1,
             ),
           ),

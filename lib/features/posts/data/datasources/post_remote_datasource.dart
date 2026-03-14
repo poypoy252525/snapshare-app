@@ -22,7 +22,7 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
       if (image != null) {
         data = FormData.fromMap({
           'content': content,
-          'image': await MultipartFile.fromBytes(
+          'image': MultipartFile.fromBytes(
             await image.readAsBytes(),
             filename: image.name,
           ),
