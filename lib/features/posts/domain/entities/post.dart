@@ -3,7 +3,6 @@ import 'author.dart';
 
 class Post extends Equatable {
   final String id;
-  final String? title;
   final String content;
   final String? image;
   final DateTime createdAt;
@@ -16,7 +15,6 @@ class Post extends Equatable {
 
   const Post({
     required this.id,
-    this.title,
     required this.content,
     this.image,
     required this.createdAt,
@@ -31,7 +29,6 @@ class Post extends Equatable {
   @override
   List<Object?> get props => [
     id,
-    title,
     content,
     image,
     createdAt,

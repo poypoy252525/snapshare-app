@@ -9,6 +9,8 @@ abstract class PostEvent extends Equatable {
 
 class GetPostsEvent extends PostEvent {}
 
+class LoadMorePostsEvent extends PostEvent {}
+
 class CreatePostEvent extends PostEvent {
   final String content;
   final dynamic image;

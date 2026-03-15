@@ -1,4 +1,4 @@
-import '../entities/post.dart';
+import '../entities/post_response.dart';
 import '../repositories/post_repository.dart';
 
 class GetPosts {
@@ -6,7 +6,7 @@ class GetPosts {
 
   GetPosts(this.repository);
 
-  Future<List<Post>> call() async {
-    return await repository.getPosts();
+  Future<PostResponse> call({int? limit, int? offset}) async {
+    return await repository.getPosts(limit: limit, offset: offset);
   }
 }
